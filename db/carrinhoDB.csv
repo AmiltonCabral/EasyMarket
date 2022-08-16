@@ -1,2 +1,1 @@
-id,produto,quantidade
-1,aaa,2
+id,nome,preco,categoria,quantidade

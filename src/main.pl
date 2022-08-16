@@ -1,7 +1,7 @@
 % :- include('produto.pl').
 % :- include('carrinho.pl').
 :- use_module(produto, [printProdutos/0, putProduto/3, removeProduto/1, getProduto/2]).
-:- use_module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/2, removeProdutoDoCarrinho/1]).
+:- use_module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/4, removeProdutoDoCarrinho/1]).
 
 main():-
     write('\e[2J'),
@@ -23,6 +23,7 @@ user():-
     write('\e[2J'),
     print('1 - Listar Produtos.'),nl,
     print('2 - Adicionar produto no carrinho.'),nl,
+    print('3 - Remover produto do carrinho.'),nl,
     print('0 - Voltar para a tela inicial.'),nl,
     read(Option),
     userOption(Option),
@@ -34,8 +35,12 @@ userOption(2):-
     read(Id),
     print('Digite a quantidade:'),nl,
     read(Quantidade),
-    getProduto(Id, Produto),
-    putProdutoNoCarrinho(Produto, Quantidade).
+    getProduto(Id, row(_, Nome, Preco, Categoria)),
+    putProdutoNoCarrinho(Nome, Preco, Categoria, Quantidade).
+userOption(3):-
+    print('Digite o ID:'),nl,
+    read(Id),
+    removeProdutoDoCarrinho(Id).
 userOption(0):- main().
 % ---------------------------------
 
