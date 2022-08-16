@@ -1,5 +1,7 @@
 :- use_module(produto, [printProdutos/0, putProduto/3, removeProduto/1, getProduto/2]).
 :- use_module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/4, removeProdutoDoCarrinho/1]).
+:- use_module(compra, [putCompra/0]).
+:- use_module(library(csv)).
 
 main():-
     write('\e[2J'),
@@ -56,7 +58,7 @@ userOption(4):-
     read(Id),
     removeProdutoDoCarrinho(Id).
 userOption(5):-
-    halt.
+    putCompra().
 userOption(0):- main().
 % ---------------------------------
 

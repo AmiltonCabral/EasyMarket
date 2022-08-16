@@ -1,3 +1,4 @@
+:- module(compra, [putCompra/0]).
 :- use_module(library(csv)).
 
 % Retorna o ultimo elemento de uma lista.
@@ -7,7 +8,7 @@ last(X,[_|Z]) :- last(X,Z).
 % Retorna o ultimo id de compraDB.csv
 getLastId(Id):-
    readCSV(File),
-   last(row(X, _, _), File),
+   last(row(X, _, _, _, _), File),
    (
       X == 'id' -> Id is 0;
       Id is X
@@ -18,6 +19,7 @@ id(X) :- getLastId(LastId), X is LastId + 1.
 
 % Lendo arquivo JSON puro
 readCSV(File) :- csv_read_file('db/compraDB.csv', File).
+readCSVCarrinho(File) :- csv_read_file('db/carrinhoDB.csv', File).
 
 % Regras para listar todos os produtos
 printCompraAux([]).
@@ -32,11 +34,20 @@ printCompras() :-
    print("Digite qualquer tecla para voltar..."),
    read(_).
 
-% Salvar em arquivo CSV
-putCompra(Produto, Quantidade) :-
-   id(ID),
-   readCSV(File),
-   append(File, [row(ID, Produto, Quantidade)], Saida),
+% Não está funcionando ainda
+% Realizar compra
+putCompraAux([row(_, Nome, Preco, Categoria, Quantidade)|Compra], Id, Saida) :-
+   writeln(Saida),
+   Compra \= [] -> (
+      readCSV(File),
+      append(File, [row(Id, Nome, Preco, Categoria, Quantidade)], Saida2),
+      putCompraAux(Compra, Id, Saida2)
+   ).
+
+putCompra() :-
+   readCSVCarrinho([_|Compra]),
+   id(Id),
+   putCompraAux(Compra, Id, Saida),
    csv_write_file("db/compraDB.csv", Saida).
 
 % Removendo um agente
