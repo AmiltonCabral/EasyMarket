@@ -1,5 +1,5 @@
+:- module(produto, [printProdutos/0, putProduto/3, removeProduto/1, getProduto/2]).
 :- use_module(library(csv)).
-:- module(produto, [printProdutos/0, putProduto/3, removeProduto/1]).
 
 % Retorna o ultimo elemento de uma lista.
 last(X,[X]).
@@ -33,6 +33,19 @@ printProdutos() :-
    printProdutosAux(File),
    print("Digite qualquer tecla para voltar..."),
    read(_).
+
+% Recuperar um produto da lista
+getProdutoAux(Id, Produto, [row(CId, CNome, CPreco, CCategoria)|T]) :-
+   (
+      CId =:= Id -> Produto = row(CId, CNome, CPreco, CCategoria);
+      getProdutoAux(Id, Produto, T)
+   ).
+
+
+getProduto(Id, Produto) :-
+   readCSV([_|File]),
+   getProdutoAux(Id, Produto, File).
+
 
 % Salvar em arquivo CSV
 putProduto(Nome, Preco, Categoria) :-

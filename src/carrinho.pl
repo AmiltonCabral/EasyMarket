@@ -1,5 +1,5 @@
+:- module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/2, removeProdutoDoCarrinho/1]).
 :- use_module(library(csv)).
-:- module(carrinho, [printCarrinho]).
 
 
 % Retorna o ultimo elemento de uma lista.
