@@ -1,6 +1,6 @@
 :- use_module(produto, [printProdutos/0, putProduto/3, removeProduto/1, getProduto/2]).
-:- use_module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/4, removeProdutoDoCarrinho/1]).
-:- use_module(compra, [putCompra/0]).
+:- use_module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/4, removeProdutoDoCarrinho/1, clearCarrinho/0]).
+:- use_module(compra, [putCompra/0, printCompras/0]).
 :- use_module(library(csv)).
 
 main():-
@@ -37,6 +37,7 @@ user():-
     writeln('      3- ADD PRODUTO CARRINHO          '),
     writeln('      4- REMOVER PRODUTO DO CARRINHO   '),
     writeln('      5- REALIZAR COMPRA               '),
+    writeln('      6- LISTAR COMPRA                 '),
     writeln('      0- SAIR                          '),
     writeln(' ===================================== '),nl,
     write('Digite sua opcao: '),
@@ -58,7 +59,9 @@ userOption(4):-
     read(Id),
     removeProdutoDoCarrinho(Id).
 userOption(5):-
-    putCompra().
+    putCompra(),
+    clearCarrinho().
+userOption(6):- printCompras().
 userOption(0):- main().
 % ---------------------------------
 

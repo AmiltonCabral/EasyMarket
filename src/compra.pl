@@ -1,4 +1,4 @@
-:- module(compra, [putCompra/0]).
+:- module(compra, [putCompra/0, printCompras/0]).
 :- use_module(library(csv)).
 
 % Retorna o ultimo elemento de uma lista.
@@ -22,32 +22,40 @@ readCSV(File) :- csv_read_file('db/compraDB.csv', File).
 readCSVCarrinho(File) :- csv_read_file('db/carrinhoDB.csv', File).
 
 % Regras para listar todos os produtos
-printCompraAux([]).
-printCompraAux([row(ID, Produto, Quantidade)|T]) :-
-   write("ID:"), writeln(ID),
-   write("Produto: "), writeln(Produto),
-   write("Quantidade: "), writeln(Quantidade), nl, printCompraAux(T).
+printCompraAux([], _).
+printCompraAux([row(CurrentID, Nome, Preco, Categoria, Quantidade)|T], ID) :-
+   CurrentID =:= ID -> (
+      write("Nome Produto: "), writeln(Nome),
+      write("Preço: "), writeln(Preco),
+      write("Categoria: "), writeln(Categoria),
+      write("Quantidade: "), writeln(Quantidade), nl,
+      printCompraAux(T, ID)
+   );
+   printCompraAux(T, ID).
 
 printCompras() :-
+   write("Digite o ID da compra: "),
+   read(Id),
+   write('\e[2J'),
    readCSV([_|File]),
-   printCompraAux(File),
+   printCompraAux(File, Id),
    print("Digite qualquer tecla para voltar..."),
    read(_).
 
 % Não está funcionando ainda
 % Realizar compra
-putCompraAux([row(_, Nome, Preco, Categoria, Quantidade)|Compra], Id, Saida) :-
-   writeln(Saida),
-   Compra \= [] -> (
-      readCSV(File),
-      append(File, [row(Id, Nome, Preco, Categoria, Quantidade)], Saida2),
-      putCompraAux(Compra, Id, Saida2)
-   ).
+putCompraAux([], _, Saida, Saida).
+putCompraAux([row(_, Nome, Preco, Categoria, Quantidade)|Compra], Id, File, Saida) :-
+   append(File, [row(Id, Nome, Preco, Categoria, Quantidade)], File2),
+   putCompraAux(Compra, Id, File2, Saida).
 
 putCompra() :-
    readCSVCarrinho([_|Compra]),
    id(Id),
-   putCompraAux(Compra, Id, Saida),
+   readCSV(File),
+   putCompraAux(Compra, Id, File, Saida),
+   write("Compra realizada com ID: "),
+   writeln(Id),
    csv_write_file("db/compraDB.csv", Saida).
 
 % Removendo um agente

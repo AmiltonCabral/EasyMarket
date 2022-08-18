@@ -1,4 +1,4 @@
-:- module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/4, removeProdutoDoCarrinho/1]).
+:- module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/4, removeProdutoDoCarrinho/1, clearCarrinho/0]).
 :- use_module(library(csv)).
 
 
@@ -52,3 +52,8 @@ removeProdutoDoCarrinho(Id) :-
    readCSV(File),
    removeProdutoDoCarrinhoCSV(File, Id, Saida),
    csv_write_file("db/carrinhoDB.csv", Saida).
+
+% Limpar carrinho
+clearCarrinho() :-
+   readCSV([Label|_]),
+   csv_write_file("db/carrinhoDB.csv", [Label]).
