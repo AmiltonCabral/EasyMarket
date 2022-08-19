@@ -1,24 +1,60 @@
 :- use_module(produto, [printProdutos/0, putProduto/3, removeProduto/1, getProduto/2]).
 :- use_module(carrinho, [printCarrinho/0, putProdutoNoCarrinho/4, removeProdutoDoCarrinho/1, clearCarrinho/0]).
 :- use_module(compra, [putCompra/0, printCompras/0]).
+:- use_module(cliente, [printClientes/0, getClientePorId/3, getClientePorLoginSenha/4, getClienteSenhaLogin/3, getCliente/2, putCliente/7, removeCliente/1]).
 :- use_module(library(csv)).
 
 main():-
     write('\e[2J'),
 
-    writeln('        +-+-+-+-+ +-+-+-+-+-+-+'),
-    writeln('        |E|a|s|y| |M|a|r|k|e|t|'),
-    writeln('        +-+-+-+-+ +-+-+-+-+-+-+'),
-    writeln(' ===================================== '),
-    writeln('          1- CLIENTE                   '),
-    writeln('          2- ADMINISTRADOR             '),
-    writeln('          0- SAIR                      '),
-    writeln(' ===================================== '),nl,
+    print('      +-+-+-+-+ +-+-+-+-+-+-+'),nl,
+    print('      |E|a|s|y| |M|a|r|k|e|t|'),nl,
+    print('      +-+-+-+-+ +-+-+-+-+-+-+'),nl,
+    print(' ===================================== '),nl,
+    print('          1- ADMINISTRADOR             '),nl,
+    print('          2- CLIENTE                   '),nl,
+    print(' ===================================== '),nl,nl,
+    print('Digite sua opcao:'),
+    read(TipoDeUsuario),
+    cadastrarOuLogar(TipoDeUsuario).
 
-    write('Digite sua opcao: '),
-    read(Option),
-    mainOption(Option),
+% Adm / User
+cadastrarOuLogar(TipoDeUsuario):-
+    print(' ===================================== '),nl,
+    print('          1- CADASTRO                  '),nl,
+    print('          2- LOGIN                     '),nl,
+    print(' ===================================== '),nl,nl,
+    print('Digite sua opcao:'),
+    read(OPCAO),
+    telaCadastrarOuLogar(OPCAO,TipoDeUsuario).
+
+telaCadastrarOuLogar(1,TipoDeUsuario):- telaCadastro(TipoDeUsuario).
+telaCadastrarOuLogar(2,TipoDeUsuario):- telaLogin(TipoDeUsuario).
+
+telaCadastro(TipoDeUsuario):-
+    print(' ===================================== '),nl,
+    print('             CADASTRO                  '),nl,
+    print(' ===================================== '),nl,nl,
+    (TipoDeUsuario =:= 1 -> print('Digite seu CNPJ:');print('Digite seu CPF:')),read(Identificador),nl,
+    print('Digite seu Nome:'),read(Nome),nl,
+    print('Escolha seu login:'),read(Login),nl,
+    print('Escolha uma senha:'),read(Senha),nl,
+    print('Digite seu endereco, tudo em uma linha so:'),read(End),nl,
+    print('Digite o seu telefone:'),read(Tel),nl,
+    print('Digite o seu email:'),read(Email),nl,nl,
+    (TipoDeUsuario =:= 1 -> print('CADASTRAR ADM AQUI');print('CADASTRAR CLIENTE AQUI')), putCliente(Nome, Identificador, Login, Senha, End, Tel, Email),main.
     main().
+
+telaLogin(TipoDeUsuario):-
+    print(' ===================================== '),nl,
+    print('              LOGIN                    '),nl,
+    print(' ===================================== '),nl,nl,
+    print('Digite seu login:'),read(Login),nl,
+    print('Digite sua senha:'),read(Senha),nl,
+    (TipoDeUsuario =:= 1 -> print('REALIZA LOGIN DE ESTABELECIMENTO AQUI'); print('REALIZA LOGIN DE CLIENTE AQUI'),nl, getClienteSenhaLogin(Login, Senha, Cliente), user()),nl.
+
+loginCliente(Cliente). %to do...
+
 
 mainOption(1):- user().
 mainOption(2):- admin().
